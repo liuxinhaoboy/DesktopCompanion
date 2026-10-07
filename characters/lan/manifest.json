@@ -1,0 +1,36 @@
+{
+  "id": "lan",
+  "name": "小蓝",
+  "version": "1.0.0",
+  "creator": "刘鑫浩",
+  "description": "银蓝长发、戴蓝色蝴蝶结的文静书桌少女。爱看书，害羞时会躲起来，被惹毛了会叉腰鼓脸。",
+  "renderer": "sprites",
+  "shape": "cat",
+  "avatar": "avatar.png",
+  "sprites": {
+    "angry": "angry.png",
+    "happy": "happy.png",
+    "greet": "greet.png",
+    "sad": "sad.png",
+    "sleepy": "sleepy.png",
+    "read": "read.png",
+    "think": "think.png",
+    "surprise": "surprise.png",
+    "love": "love.png",
+    "shy": "shy.png",
+    "peek": "peek.png",
+    "stretch": "stretch.png",
+    "spin": "spin.png",
+    "jump": "jump.png",
+    "win": "win.png"
+  },
+  "mood_styles": {
+    "兴奋": {"body": [155, 200, 240], "eye": [30, 60, 90]},
+    "开心": {"body": [170, 215, 245], "eye": [35, 60, 95]},
+    "平静": {"body": [190, 215, 240], "eye": [40, 65, 95]},
+    "低落": {"body": [160, 175, 195], "eye": [50, 55, 65]},
+    "难过": {"body": [140, 155, 180], "eye": [45, 50, 60]},
+    "生气": {"body": [220, 160, 160], "eye": [90, 35, 35]}
+  },
+  "display": "auto"
+}
