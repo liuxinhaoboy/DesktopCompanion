@@ -1,0 +1,19 @@
+{
+  "_说明": "投喂映射表：把什么拖给她，就算哪顿饭。",
+  "snack": {
+    "label": "小零食",
+    "extensions": [".txt", ".md", ".log", ".ini", ".cfg"],
+    "comment": "小小的一块，甜甜的味道~"
+  },
+  "meal": {
+    "label": "正餐",
+    "extensions": [".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf",
+                   ".png", ".jpg", ".jpeg", ".gif", ".mp4", ".zip"],
+    "comment": "一口一个好满足！"
+  },
+  "snack_json": {
+    "label": "配置文件",
+    "extensions": [".json", ".yaml", ".yml", ".toml"],
+    "comment": "五香味儿的，好细。"
+  }
+}
