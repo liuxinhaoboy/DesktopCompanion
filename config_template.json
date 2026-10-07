@@ -1,8 +1,6 @@
 {
   "_说明": "这是不含密钥的模板。把 api_key 填上、改个名字保存为 config.json 即可使用。",
-
   "llm": {
-    "_说明": "AI 大脑的接口设置。base_url 必须以 /v1 结尾。",
     "base_url": "https://docode.cc/v1",
     "api_key": "YOUR_API_KEY_HERE",
     "model": "gpt-5.5",
@@ -10,24 +8,9 @@
     "timeout_seconds": 90,
     "max_tokens": 800
   },
-
-  "character": {
-    "_说明": "角色的基本信息。current_id 是上次用的伙伴，程序启动时自动加载。",
-    "name": "小灵",
-    "current_id": "xiaoling",
-    "size": 160,
-    "opacity": 1.0
-  },
-
-  "window": {
-    "_说明": "桌宠窗口行为。always_on_top=true 表示永远盖在其他窗口上面。",
-    "always_on_top": true,
-    "start_position": "bottom_right",
-    "click_through_when_idle": false
-  },
-
+  "character": {"name": "小灵", "current_id": "xiaoling", "size": 160, "opacity": 1.0},
+  "window": {"always_on_top": true, "start_position": "bottom_right", "click_through_when_idle": false},
   "emotion": {
-    "_说明": "情感数值的调节旋钮。改大 mood_decay_per_minute 她会更快变无聊；time_decay_floor 是放多久没人理也最多无聊到几分（默认 20，再往下只能被事件伤到）。",
     "mood_decay_per_minute": 0.5,
     "time_decay_floor": 20,
     "affinity_diminish_power": 0.5,
@@ -35,85 +18,31 @@
     "angry_mood_threshold": 20,
     "trust_gate_for_danger_ops": 30
   },
-
-  "memory": {
-    "_说明": "长期记忆。use_chroma=true 用向量库检索；出错自动换 JSON 关键词模式，程序不会崩。",
-    "use_chroma": true,
-    "recall_top_k": 3
-  },
-
+  "memory": {"use_chroma": true, "recall_top_k": 3},
   "chaos": {
-    "_说明": "捣乱系统。enable_L3=true 表示允许她最小化你的窗口等强干预，但每次都会先弹确认框。",
-    "enabled": true,
-    "enable_L1": true,
-    "enable_L2": true,
-    "enable_L3": true,
-    "L3_require_confirm": true,
-    "tick_seconds": 3,
-    "global_cooldown_seconds": 180,
-    "ignore_cooldown_when_angry": true
+    "enabled": true, "enable_L1": true, "enable_L2": true, "enable_L3": true,
+    "L3_require_confirm": true, "tick_seconds": 3,
+    "global_cooldown_seconds": 180, "ignore_cooldown_when_angry": true
   },
-
   "sandbox": {
-    "_说明": "电脑控制的活动范围与安全策略。workspace_root 留空 = 暂不开放文件操作。她永远无法碰这个目录之外的文件；删除只进回收站。",
-    "workspace_root": "",
-    "enable_rollback_snapshot": true,
-    "allow_files": true,
-    "allow_processes": false,
-    "allow_clipboard": true,
-    "allow_windows": true,
-    "confirm_policy": "always",
-    "process_whitelist": []
+    "workspace_root": "", "enable_rollback_snapshot": true,
+    "allow_files": true, "allow_processes": false,
+    "allow_clipboard": true, "allow_windows": true,
+    "confirm_policy": "always", "process_whitelist": []
   },
-
   "vision": {
-    "_说明": "图片聊天用的视觉模型。inherit_from_llm=true 表示和文字 AI 共用地址与密钥。",
-    "enabled": false,
-    "inherit_from_llm": true,
-    "base_url": "",
-    "api_key": "",
-    "model": "",
-    "max_image_kb": 500
+    "enabled": false, "inherit_from_llm": true,
+    "base_url": "", "api_key": "", "model": "", "max_image_kb": 500
   },
-
   "voice": {
-    "_说明": "语音设置。tts_provider 用 edge-tts 免费且不需要密钥；stt 需要一个支持 /audio/transcriptions 的接口。",
-    "enabled": false,
-    "record_device": "default",
-    "max_record_seconds": 60,
-    "stt_provider": "openai_compatible",
-    "stt_base_url": "",
-    "stt_api_key": "",
-    "stt_model": "",
-    "tts_provider": "edge-tts",
-    "tts_voice": "zh-CN-XiaoxiaoNeural",
+    "enabled": false, "record_device": "default", "max_record_seconds": 60,
+    "stt_provider": "openai_compatible", "stt_base_url": "",
+    "stt_api_key": "", "stt_model": "",
+    "tts_provider": "edge-tts", "tts_voice": "zh-CN-XiaoxiaoNeural",
     "auto_speak": false
   },
-
-  "browser": {
-    "_说明": "浏览器插件联动。pair_token 是一次性配对码，在插件设置页粘贴后即失效。",
-    "enabled": false,
-    "paired": false,
-    "pair_token": ""
-  },
-
-  "privacy": {
-    "_说明": "隐私设置。save_audio=false 时录音转成文字后立刻删除，不在硬盘留音频。",
-    "save_audio": false,
-    "log_retention_days": 30
-  },
-
-  "sleep": {
-    "_说明": "作息。这几小时她在睡觉：闭眼、呼吸变慢、偶尔冒 Zzz、完全不捣乱、心情和饱腹掉得慢一半。改这里立即生效，不用重启。enabled 改成 false 她就不再睡觉了。",
-    "sleep_start_hour": 23,
-    "sleep_end_hour": 7,
-    "enabled": true
-  },
-
-  "ui": {
-    "_说明": "界面细节。",
-    "bubble_duration_ms": 6000,
-    "typing_speed_ms": 28,
-    "show_debug_hud": false
-  }
+  "browser": {"enabled": false, "paired": false, "pair_token": ""},
+  "privacy": {"save_audio": false, "log_retention_days": 30},
+  "sleep": {"sleep_start_hour": 23, "sleep_end_hour": 7, "enabled": true},
+  "ui": {"bubble_duration_ms": 6000, "typing_speed_ms": 28, "show_debug_hud": false}
 }
