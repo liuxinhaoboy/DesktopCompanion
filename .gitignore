@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+*.pyc
+
+# AI 工具的会话残留，与本项目无关
+.zcode/
+.mimosa/
+.workbuddy-ai/
+
+# 运行数据（含加密密钥与聊天记忆，不要进版本库）
+data/
+
+# 临时脚本与日志
+_*.py
+smoke.log
+*.log
+
+# 编辑器
+.vscode/
+.idea/

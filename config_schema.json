@@ -1,0 +1,459 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://local/desktopcompanion/config_schema.json",
+  "title": "DesktopCompanion 配置文件说明（config.json）",
+  "description": "这份 schema 用来解释 config.json 里每个字段的含义、类型和默认值，方便你手动编辑时对照。\n\n重要：程序运行时并不强制用这份 schema 校验。真正的读取逻辑在 config/store.py 的 ConfigStore 里——它会把你的 config.json 和内置默认值递归合并（你少写的字段自动补默认值），并做类型检查（类型写错就用默认值、记一条警告，不会崩）。\n\n所以：改错了不致于让程序起不来，但字段名拼错等于没改。改完最好用「设置」面板核对一遍。\n\n默认值与 config/store.py 的 DEFAULT_CONFIG 保持一致；新增字段时两处都要更新。",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "llm": {
+      "type": "object",
+      "description": "AI 大脑的接口设置。不配好她只会说固定台词、不会聊天。",
+      "additionalProperties": true,
+      "properties": {
+        "base_url": {
+          "type": "string",
+          "default": "https://docode.cc/v1",
+          "description": "OpenAI 兼容接口地址，必须以 /v1 结尾。"
+        },
+        "api_key": {
+          "type": "string",
+          "default": "",
+          "description": "接口密钥。首次启动时会被 DPAPI 加密迁移到 data/secrets.bin，此处随后变成一个 secret:xxx 引用，不再存明文。绝不要把明文密钥分享出去。"
+        },
+        "model": {
+          "type": "string",
+          "default": "gpt-5.5",
+          "description": "主模型名，必须是服务商实际支持的模型。"
+        },
+        "backup_models": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["gpt-5.6-terra", "gpt-5.6-sol"],
+          "description": "备用模型列表。主模型请求失败时依次尝试。设置面板里用逗号分隔的文本填写。"
+        },
+        "timeout_seconds": {
+          "type": "number",
+          "default": 90,
+          "description": "单次请求超时秒数。网络慢可以适当调大。"
+        },
+        "max_tokens": {
+          "type": "integer",
+          "default": 800,
+          "description": "单次回复的最大长度上限。实际回复长度还会随情绪在 [0.6, 1.1] 温度区间内浮动。"
+        }
+      }
+    },
+    "vision": {
+      "type": "object",
+      "description": "视觉模型（发图片给她看）。默认关闭；开启后可继承主接口或单独配置。",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否启用图片多模态。关闭时聊天窗的 📎 选图按钮不起作用。"
+        },
+        "inherit_from_llm": {
+          "type": "boolean",
+          "default": true,
+          "description": "true=复用 llm 段的 base_url 和 api_key，只换 model；false=用下面独立填写的地址和密钥。"
+        },
+        "base_url": {
+          "type": "string",
+          "default": "",
+          "description": "独立视觉接口地址（仅当 inherit_from_llm=false 时生效）。"
+        },
+        "api_key": {
+          "type": "string",
+          "default": "",
+          "description": "独立视觉接口密钥（仅当 inherit_from_llm=false 时生效）。同样会被加密存储。"
+        },
+        "model": {
+          "type": "string",
+          "default": "",
+          "description": "视觉模型名（需支持图片输入）。"
+        },
+        "max_image_kb": {
+          "type": "integer",
+          "default": 500,
+          "description": "发送前把图片压缩到这个 KB 以内（长边≤1568 像素 + JPEG 逐档降质）。聊天记录只存 '[图片：文件名]'，绝不存图片内容。"
+        }
+      }
+    },
+    "voice": {
+      "type": "object",
+      "description": "语音对话（录音转文字 + 文字转语音）。默认关闭。",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否启用语音。关闭时聊天窗不显示 🎤 按钮。"
+        },
+        "record_device": {
+          "type": "string",
+          "default": "default",
+          "description": "录音设备名。'default' 表示系统默认麦克风。设置面板的下拉会列出可用设备。"
+        },
+        "max_record_seconds": {
+          "type": "integer",
+          "default": 60,
+          "description": "单次录音最长时间上限。"
+        },
+        "stt_provider": {
+          "type": "string",
+          "default": "openai_compatible",
+          "description": "语音转文字（STT）的提供方。目前走 OpenAI 兼容的 /audio/transcriptions。"
+        },
+        "stt_base_url": {
+          "type": "string",
+          "default": "",
+          "description": "STT 接口地址。留空则不支持录音转文字，会优雅提示。"
+        },
+        "stt_api_key": {
+          "type": "string",
+          "default": "",
+          "description": "STT 接口密钥。同样会被加密存储。"
+        },
+        "stt_model": {
+          "type": "string",
+          "default": "",
+          "description": "STT 模型名。"
+        },
+        "tts_provider": {
+          "type": "string",
+          "default": "edge-tts",
+          "description": "文字转语音（TTS）的提供方。edge-tts 免费、需联网、无需密钥。"
+        },
+        "tts_voice": {
+          "type": "string",
+          "default": "zh-CN-XiaoxiaoNeural",
+          "description": "TTS 声音名。常用：zh-CN-XiaoxiaoNeural（女声）、zh-CN-YunxiNeural（男声）。"
+        },
+        "auto_speak": {
+          "type": "boolean",
+          "default": false,
+          "description": "她回复后是否自动朗读。"
+        }
+      }
+    },
+    "browser": {
+      "type": "object",
+      "description": "浏览器插件（本机桥）。桥只听 127.0.0.1，所有动作都需你逐次确认。",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否启用浏览器插件功能。"
+        },
+        "paired": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否已配对（程序自动维护，不用手填）。"
+        },
+        "pair_token": {
+          "type": "string",
+          "default": "",
+          "description": "一次性配对码（展示用，配对成功后自动清空，5 分钟有效）。"
+        },
+        "port": {
+          "type": "integer",
+          "default": 8731,
+          "description": "本机桥监听端口。被占用时程序会自动往后找 3 个可用端口。"
+        },
+        "allow_read": {
+          "type": "boolean",
+          "default": true,
+          "description": "允许读取网页正文（内容进模型上下文前会先确认）。"
+        },
+        "allow_navigate": {
+          "type": "boolean",
+          "default": true,
+          "description": "允许打开网址（只许 http/https）。"
+        },
+        "allow_click": {
+          "type": "boolean",
+          "default": true,
+          "description": "允许点击页面元素（最终提交/付款按钮永禁）。"
+        },
+        "allow_type": {
+          "type": "boolean",
+          "default": true,
+          "description": "允许在输入框填字（密码框、验证码、2FA 永不自动填）。"
+        },
+        "allow_scroll": {
+          "type": "boolean",
+          "default": true,
+          "description": "允许滚动页面。"
+        },
+        "allow_close_tab": {
+          "type": "boolean",
+          "default": false,
+          "description": "允许关闭标签页（较敏感，默认关）。"
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "description": "隐私设置。",
+      "additionalProperties": true,
+      "properties": {
+        "save_audio": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否保留录音文件。默认转写完成后立即删除，不落盘。"
+        },
+        "log_retention_days": {
+          "type": "integer",
+          "default": 30,
+          "description": "日志保留天数（范围 1~3650）。"
+        }
+      }
+    },
+    "character": {
+      "type": "object",
+      "description": "当前角色的基本信息与外观。人设正文在各角色包的 system_prompt.md 里。",
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": "小灵",
+          "description": "显示名（展示用）。"
+        },
+        "current_id": {
+          "type": "string",
+          "default": "xiaoling",
+          "description": "上次使用的角色 id，启动时自动加载。内置：xiaoling/dog/slime/lan。"
+        },
+        "size": {
+          "type": "integer",
+          "default": 160,
+          "description": "桌宠体型大小（像素）。"
+        },
+        "opacity": {
+          "type": "number",
+          "default": 1.0,
+          "description": "不透明度（0.0~1.0）。想让她半透明不挡屏幕就调低。"
+        }
+      }
+    },
+    "window": {
+      "type": "object",
+      "description": "桌宠窗口行为。",
+      "additionalProperties": true,
+      "properties": {
+        "always_on_top": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否永远盖在其他窗口上面。"
+        },
+        "start_position": {
+          "type": "string",
+          "default": "bottom_right",
+          "description": "启动时出现的位置。"
+        },
+        "click_through_when_idle": {
+          "type": "boolean",
+          "default": false,
+          "description": "空闲时鼠标是否可穿透点击到她身后的窗口。"
+        }
+      }
+    },
+    "emotion": {
+      "type": "object",
+      "description": "情感数值的调节旋钮。改这里会改变她的'脾气'。",
+      "additionalProperties": true,
+      "properties": {
+        "mood_decay_per_minute": {
+          "type": "number",
+          "default": 0.5,
+          "description": "情绪每分钟自然下降值。调大她会更快变无聊。"
+        },
+        "time_decay_floor": {
+          "type": "number",
+          "default": 20,
+          "description": "长时间没人理时情绪最多降到几分（再往下只能被具体事件伤到）。默认 20 是实测值——否则放一晚她天天暴怒，'生气'就不值钱了。"
+        },
+        "affinity_diminish_power": {
+          "type": "number",
+          "default": 0.5,
+          "description": "好感增益的边际递减指数。越大，重复互动涨好感越慢。"
+        },
+        "low_mood_threshold": {
+          "type": "number",
+          "default": 30,
+          "description": "情绪低于此值算'低落'。"
+        },
+        "angry_mood_threshold": {
+          "type": "number",
+          "default": 20,
+          "description": "情绪低于此值算'生气'。"
+        },
+        "trust_gate_for_danger_ops": {
+          "type": "number",
+          "default": 30,
+          "description": "放行高危操作的信任门槛。"
+        }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "description": "长期记忆。",
+      "additionalProperties": true,
+      "properties": {
+        "use_chroma": {
+          "type": "boolean",
+          "default": true,
+          "description": "true=用 ChromaDB 向量库检索；出错时自动降级到 JSON 关键词模式，程序不会崩。"
+        },
+        "recall_top_k": {
+          "type": "integer",
+          "default": 3,
+          "description": "每次回忆检索几条相关记忆。"
+        }
+      }
+    },
+    "chaos": {
+      "type": "object",
+      "description": "自主行为（捣乱循环）开关。她的自主行为永远只控制她自己，不碰你的文件/进程/浏览器。",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "总开关。关掉后她完全安静（只响应你的互动）。"
+        },
+        "enable_L1": {
+          "type": "boolean",
+          "default": true,
+          "description": "L1 无害级：气泡吐槽、闲置关心、高负载抱怨、整点报时。"
+        },
+        "enable_L2": {
+          "type": "boolean",
+          "default": true,
+          "description": "L2 干扰级：假死、半透明、剪贴板换颜文字（这个会先确认）。"
+        },
+        "enable_L3": {
+          "type": "boolean",
+          "default": true,
+          "description": "L3 强干预级：挡窗口、弹卡索要互动（每次都先确认）。"
+        },
+        "L3_require_confirm": {
+          "type": "boolean",
+          "default": true,
+          "description": "L3 动作是否必须弹确认框。强烈建议保持 true。"
+        },
+        "tick_seconds": {
+          "type": "number",
+          "default": 3,
+          "description": "自主循环每几秒观察一次环境。"
+        },
+        "global_cooldown_seconds": {
+          "type": "number",
+          "default": 180,
+          "description": "两次主动行为之间的全局冷却秒数。"
+        },
+        "ignore_cooldown_when_angry": {
+          "type": "boolean",
+          "default": true,
+          "description": "生气时是否无视冷却（会更频繁地闹）。"
+        }
+      }
+    },
+    "sandbox": {
+      "type": "object",
+      "description": "电脑控制（hands/）的活动范围与能力开关。默认最小权限。",
+      "additionalProperties": true,
+      "properties": {
+        "workspace_root": {
+          "type": "string",
+          "default": "",
+          "description": "文件操作的工作目录。她永远碰不到这个目录之外的文件（沙箱会校验路径穿越和符号链接）。留空则首次启动弹窗让你选。"
+        },
+        "enable_rollback_snapshot": {
+          "type": "boolean",
+          "default": true,
+          "description": "移动/重命名/复制前是否生成回滚快照，以便撤销。"
+        },
+        "allow_files": {
+          "type": "boolean",
+          "default": true,
+          "description": "允许文件操作（列举/预览/新建/复制/移动/重命名/删除）。删除只进回收站，永不永久删。"
+        },
+        "allow_processes": {
+          "type": "boolean",
+          "default": false,
+          "description": "允许进程操作（最敏感，默认关）。只能启动白名单程序、只能关闭她自己启动的子进程。"
+        },
+        "allow_clipboard": {
+          "type": "boolean",
+          "default": true,
+          "description": "允许读写剪贴板（覆盖前留快照可恢复）。"
+        },
+        "allow_windows": {
+          "type": "boolean",
+          "default": true,
+          "description": "允许窗口操作（聚焦/最小化/恢复/移动，只动你自己的普通窗口）。"
+        },
+        "confirm_policy": {
+          "type": "string",
+          "enum": ["always", "smart"],
+          "default": "always",
+          "description": "确认策略。always=每次都弹确认；smart=只有高危动作才弹。"
+        },
+        "process_whitelist": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "允许她启动的程序名列表（仅当 allow_processes=true 时生效）。"
+        }
+      }
+    },
+    "sleep": {
+      "type": "object",
+      "description": "作息。这几小时里她完全静默（连气泡都不冒，等于睡觉）。这里是深夜静默的唯一入口，改了立即生效；只有这里没配值时才退回 brain/chaos_trigger_matrix.json 的 作息.quiet_hours。",
+      "additionalProperties": true,
+      "properties": {
+        "sleep_start_hour": {
+          "type": "integer",
+          "default": 23,
+          "description": "睡觉开始的小时（24 小时制）。"
+        },
+        "sleep_end_hour": {
+          "type": "integer",
+          "default": 7,
+          "description": "睡觉结束的小时（24 小时制）。"
+        },
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否启用作息。"
+        }
+      }
+    },
+    "ui": {
+      "type": "object",
+      "description": "界面细节。",
+      "additionalProperties": true,
+      "properties": {
+        "bubble_duration_ms": {
+          "type": "integer",
+          "default": 6000,
+          "description": "头顶气泡停留时长（毫秒）。"
+        },
+        "typing_speed_ms": {
+          "type": "integer",
+          "default": 28,
+          "description": "聊天窗打字机效果每个字的间隔（毫秒）。"
+        },
+        "show_debug_hud": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否显示调试信息浮层。"
+        }
+      }
+    }
+  }
+}
