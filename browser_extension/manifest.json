@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "桌宠小助手（本机桥）",
+  "version": "1.0.0",
+  "description": "把你的桌宠和 Chrome/Edge 连起来：在你逐次确认后，她才能读网页正文、点击、输入或滚动。只连本机 127.0.0.1。",
+  "minimum_chrome_version": "102",
+  "permissions": ["storage", "tabs", "activeTab", "scripting", "alarms"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "options_page": "options.html",
+  "action": {
+    "default_title": "桌宠小助手：点这里打开配对设置",
+    "default_popup": "options.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

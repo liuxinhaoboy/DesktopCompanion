@@ -1,0 +1,136 @@
+{
+  "_说明": "商品表。价格与效果数值都写在这里，调平衡只改这个文件、不用动代码。kind：snack=零食（消耗品，按份数存，boost=加成倍数，1.0 相当于一顿正餐）/ accessory=配饰（买断可穿戴）/ lines=台词包（买断加台词）。accessory 需要 slot(head/neck) + shape(hat/bow/scarf/glasses) + color([r,g,b])。hidden=true 的商品不在商店里显示（留给隐藏彩蛋）。",
+  "items": [
+    {
+      "id": "snack_candy",
+      "name": "水果糖",
+      "kind": "snack",
+      "price": 3,
+      "desc": "甜甜的，含在嘴里会眯眼睛。",
+      "boost": 1.4
+    },
+    {
+      "id": "snack_pudding",
+      "name": "焦糖布丁",
+      "kind": "snack",
+      "price": 6,
+      "desc": "她会先戳两下再吃。",
+      "boost": 1.8
+    },
+    {
+      "id": "snack_cake",
+      "name": "草莓小蛋糕",
+      "kind": "snack",
+      "price": 8,
+      "desc": "上面那颗草莓她要留到最后吃。",
+      "boost": 2.4
+    },
+    {
+      "id": "snack_feast",
+      "name": "限定·暖锅",
+      "kind": "snack",
+      "price": 25,
+      "desc": "限定款。吃完会打一个很满足的嗝。",
+      "boost": 4.0
+    },
+    {
+      "id": "acc_bow_pink",
+      "name": "粉色蝴蝶结",
+      "kind": "accessory",
+      "price": 12,
+      "slot": "head",
+      "shape": "bow",
+      "color": [
+        240,
+        140,
+        170
+      ],
+      "desc": "别在耳朵边上，走路一晃一晃的。"
+    },
+    {
+      "id": "acc_hat_straw",
+      "name": "小草帽",
+      "kind": "accessory",
+      "price": 18,
+      "slot": "head",
+      "shape": "hat",
+      "color": [
+        222,
+        190,
+        120
+      ],
+      "desc": "戴上像是要去海边，虽然她哪也不去。"
+    },
+    {
+      "id": "acc_glasses",
+      "name": "圆框眼镜",
+      "kind": "accessory",
+      "price": 15,
+      "slot": "head",
+      "shape": "glasses",
+      "color": [
+        120,
+        110,
+        100
+      ],
+      "desc": "戴上之后她会假装自己很博学。"
+    },
+    {
+      "id": "acc_scarf_red",
+      "name": "红围巾",
+      "kind": "accessory",
+      "price": 20,
+      "slot": "neck",
+      "shape": "scarf",
+      "color": [
+        214,
+        92,
+        92
+      ],
+      "desc": "天一冷就想往她脖子上套。"
+    },
+    {
+      "id": "lines_pat",
+      "name": "撒娇台词包",
+      "kind": "lines",
+      "price": 10,
+      "lines_scene": "pat_lines",
+      "lines": [
+        "唔……再摸一下下也不是不行啦。",
+        "（眯起眼睛）你手好暖。",
+        "哼，才、才没有很享受呢！",
+        "再摸头我要收钱了哦……骗你的。"
+      ],
+      "desc": "解锁 4 句摸头时的新台词。"
+    },
+    {
+      "id": "lines_feed",
+      "name": "吃货台词包",
+      "kind": "lines",
+      "price": 10,
+      "lines_scene": "feed_lines",
+      "lines": [
+        "唔唔，这个好好吃！还有吗？",
+        "（腮帮子鼓鼓的）你别看我啦……",
+        "这算加餐哦，不算正餐的。",
+        "好吃到我尾巴都要翘起来了。"
+      ],
+      "desc": "解锁 4 句被投喂时的新台词。"
+    },
+    {
+      "id": "egg_mystery",
+      "name": "？？？",
+      "kind": "accessory",
+      "price": 0,
+      "slot": "head",
+      "shape": "bow",
+      "color": [
+        180,
+        150,
+        240
+      ],
+      "hidden": true,
+      "desc": "（这个不该出现在商店里）"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <style>
+    body { font-family: "Microsoft YaHei", sans-serif; width: 340px;
+           margin: 0; padding: 18px; background: #fbf7f0; color: #4a3f35; }
+    h1 { font-size: 16px; margin: 0 0 4px; }
+    .sub { font-size: 12px; color: #8a7d6f; margin-bottom: 14px; line-height: 1.6; }
+    label { display: block; font-size: 12px; margin: 10px 0 4px; color: #6b5d4f; }
+    input { width: 100%; box-sizing: border-box; padding: 7px 9px; font-size: 13px;
+            border: 1px solid #e0d5c6; border-radius: 8px; background: #fff; }
+    .row { display: flex; gap: 8px; }
+    .row input { flex: 1; }
+    button { margin-top: 14px; width: 100%; padding: 9px; border: none; border-radius: 10px;
+             background: #7fb3d5; color: #fff; font-size: 14px; cursor: pointer; }
+    button:hover { background: #6aa3c9; }
+    #status { margin-top: 12px; font-size: 12px; padding: 8px 10px; border-radius: 8px;
+              background: #f0e9df; }
+    .ok { color: #2e7d32; } .bad { color: #c62828; }
+    code { background: #f0e9df; padding: 1px 5px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>桌宠小助手 · 配对</h1>
+  <div class="sub">
+    在桌宠「设置 → 浏览器插件」点<b>生成配对码</b>，把配对码填到下面。<br>
+    只连本机 <code>127.0.0.1</code>，不会联网。
+  </div>
+
+  <label>本机地址（一般不用改）</label>
+  <div class="row">
+    <input id="host" value="127.0.0.1" style="flex:2">
+    <input id="port" value="8731" style="flex:1">
+  </div>
+
+  <label>配对码（形如 ABCD-1234，不区分大小写）</label>
+  <input id="pairCode" placeholder="把桌宠给你的配对码粘到这里">
+
+  <button id="save">保存并连接</button>
+  <div id="status">状态读取中…</div>
+
+  <script src="options.js"></script>
+</body>
+</html>
