@@ -1,0 +1,83 @@
+name: Tests
+
+on:
+  push:
+    branches: ["main", "arena/**"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Windows · Python ${{ matrix.python-version }}
+    runs-on: windows-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    env:
+      QT_QPA_PLATFORM: offscreen
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Test PSE
+        run: python tests/test_pse.py
+
+      - name: Test ACL
+        run: python tests/test_acl.py
+
+      - name: Test configuration and secrets
+        run: python tests/test_config.py
+
+      - name: Test characters
+        run: python tests/test_characters.py
+
+      - name: Test settings UI
+        run: python tests/test_settings.py
+
+      - name: Test voice and multimodal
+        run: python tests/test_voice.py
+
+      - name: Test computer controls
+        run: python tests/test_hands.py
+
+      - name: Test browser bridge
+        run: python tests/test_browser_protocol.py
+
+      - name: Test 3D model rendering
+        run: python tests/test_model3d.py
+
+      - name: Test circadian behavior
+        run: python tests/test_circadian.py
+
+      - name: Test shop and economy
+        run: python tests/test_shop.py
+
+      - name: Smoke test first-run startup
+        shell: pwsh
+        run: |
+          $env:DC_SMOKE_TEST = "3"
+          $output = python main.py
+          $exitCode = $LASTEXITCODE
+          $output | Write-Output
+          if ($exitCode -ne 0) { exit $exitCode }
+          if (($output -join "`n") -notmatch "SMOKE_OK") {
+            Write-Error "First-run startup did not print SMOKE_OK."
+            exit 1
+          }

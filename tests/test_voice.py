@@ -48,6 +48,27 @@ def run(coro):
 # 1. recorder
 # ======================================================================
 
+def test_chat_panel_has_branded_header():
+    """聊天窗使用统一抬头，角色名称应正确显示。"""
+    _get_qapp()
+    from face.chat_panel import ChatPanel
+
+    class _Engine:
+        name = "测试灵"
+        _history = []
+
+        def snapshot(self):
+            return {"mood_word": "平静", "mood": 60,
+                    "affinity": 50, "trust": 40}
+
+    panel = ChatPanel(_Engine())
+    from PyQt6.QtWidgets import QLabel
+    title = panel.brand_header.findChild(QLabel, "brandHeaderTitle")
+    assert title is not None and title.text() == "和 测试灵 聊聊"
+    panel.close()
+    panel.deleteLater()
+
+
 def test_pcm_to_wav_has_valid_header():
     from voice.recorder import _pcm_to_wav, SAMPLE_RATE
     pcm = b"\x00\x00" * SAMPLE_RATE          # 1 秒静音

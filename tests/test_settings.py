@@ -90,6 +90,17 @@ def test_panel_has_seven_tabs():
                      "浏览器插件", "隐私", "商店"]
 
 
+def test_panel_has_personalized_brand_header():
+    """设置页统一的暖色抬头应显示当前伙伴名称。"""
+    _get_qapp()
+    d = temp_dir(); make_project(d)
+    panel = _panel(_controller(d))
+    from PyQt6.QtWidgets import QLabel
+    title = panel.brand_header.findChild(QLabel, "brandHeaderTitle")
+    assert title is not None and title.text() == "测试灵 的小窝"
+    assert panel.brand_header.objectName() == "brandHeader"
+
+
 def test_display_mode_combo_has_two_options():
     """3D 显示模式只给"自动/只用 2D"两项。
 

@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="470" viewBox="0 0 1200 470" role="img" aria-labelledby="title desc">
+  <title id="title">DesktopCompanion</title>
+  <desc id="desc">A friendly AI desktop pet for Windows, with emotions, memory, voice, and consent-first controls.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffaf1"/>
+      <stop offset="1" stop-color="#f2f6ed"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f8fbf7"/>
+    </linearGradient>
+    <linearGradient id="fur" x1="0" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#cde2fa"/>
+      <stop offset="1" stop-color="#8eb8e1"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#746d60" flood-opacity=".15"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="470" rx="28" fill="url(#paper)"/>
+  <circle cx="1100" cy="52" r="92" fill="#e7f0df" opacity=".75"/>
+  <circle cx="42" cy="426" r="128" fill="#f8e8d6" opacity=".6"/>
+  <path d="M0 376c157-42 300-29 444 5v89H0z" fill="#f6efe3" opacity=".7"/>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <rect x="72" y="61" width="166" height="30" rx="15" fill="#e7f1e4"/>
+    <circle cx="91" cy="76" r="5" fill="#79a875"/>
+    <text x="106" y="81" fill="#62885e" font-size="12" font-weight="700" letter-spacing="1.5">WINDOWS DESKTOP PET</text>
+    <text x="72" y="151" fill="#3a3530" font-size="47" font-weight="750" letter-spacing="-1.7">A little companion,</text>
+    <text x="72" y="207" fill="#3a3530" font-size="47" font-weight="750" letter-spacing="-1.7">right on your desktop.</text>
+    <text x="74" y="252" fill="#756d61" font-size="17">Emotions, memories, and a voice of her own.</text>
+    <text x="74" y="279" fill="#756d61" font-size="17">Your computer stays yours — actions need your OK.</text>
+
+    <g transform="translate(74 319)">
+      <rect width="150" height="40" rx="20" fill="#fffdf9" stroke="#e7ddcd"/>
+      <circle cx="22" cy="20" r="6" fill="#7fb77e"/>
+      <text x="39" y="25" fill="#514a40" font-size="12" font-weight="650">MOOD &amp; MEMORY</text>
+      <rect x="162" width="132" height="40" rx="20" fill="#fffdf9" stroke="#e7ddcd"/>
+      <circle cx="184" cy="20" r="6" fill="#84a9d0"/>
+      <text x="201" y="25" fill="#514a40" font-size="12" font-weight="650">VOICE &amp; VISION</text>
+      <rect x="306" width="145" height="40" rx="20" fill="#fffdf9" stroke="#e7ddcd"/>
+      <circle cx="328" cy="20" r="6" fill="#e0995e"/>
+      <text x="345" y="25" fill="#514a40" font-size="12" font-weight="650">YOU STAY IN CONTROL</text>
+    </g>
+    <text x="74" y="414" fill="#9a8f7d" font-size="12" letter-spacing=".2">PYTHON · PYQT6 · OPENAI-COMPATIBLE APIs</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="660" y="50" width="472" height="370" rx="22" fill="#fffdf9" stroke="#e5ddcf"/>
+    <path d="M682 50h428a22 22 0 0 1 22 22v38H660V72a22 22 0 0 1 22-22z" fill="#fffdf9"/>
+    <circle cx="687" cy="82" r="5" fill="#e5a49a"/>
+    <circle cx="705" cy="82" r="5" fill="#edcf91"/>
+    <circle cx="723" cy="82" r="5" fill="#9fc79d"/>
+    <text x="896" y="87" text-anchor="middle" fill="#9a8f7d" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" letter-spacing="1">A LITTLE ROOM ON YOUR DESKTOP</text>
+    <path d="M660 110h472v1H660z" fill="#eee6da"/>
+    <rect x="682" y="133" width="227" height="74" rx="16" fill="#f3f7f0" stroke="#e4ecdf"/>
+    <text x="701" y="161" fill="#60855d" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="700">XIAOLING</text>
+    <text x="701" y="184" fill="#514a40" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14">“Hey, you’re back!”</text>
+    <path d="M710 207l-8 13 22-13" fill="#f3f7f0" stroke="#e4ecdf" stroke-linejoin="round"/>
+
+    <!-- Original vector cat mascot inspired by the in-app cat renderer. -->
+    <ellipse cx="899" cy="368" rx="93" ry="15" fill="#dce7d7" opacity=".8"/>
+    <path d="M826 233 820 156q-1-12 10-5l61 43M970 233l7-77q1-12-10-5l-61 43" fill="url(#fur)" stroke="#6f94bb" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M824 250c0-49 33-84 76-84s76 35 76 84v44c0 47-33 79-76 79s-76-32-76-79z" fill="url(#fur)" stroke="#6f94bb" stroke-width="4"/>
+    <path d="M836 221 830 175l38 29M960 221l6-46-38 29" fill="#f3b3b0" opacity=".9"/>
+    <ellipse cx="867" cy="266" rx="7" ry="11" fill="#3a4d61"/>
+    <ellipse cx="933" cy="266" rx="7" ry="11" fill="#3a4d61"/>
+    <circle cx="869" cy="262" r="2.3" fill="#fff"/>
+    <circle cx="935" cy="262" r="2.3" fill="#fff"/>
+    <ellipse cx="844" cy="286" rx="11" ry="6" fill="#e9959a" opacity=".65"/>
+    <ellipse cx="956" cy="286" rx="11" ry="6" fill="#e9959a" opacity=".65"/>
+    <path d="M895 284q4-5 8 0-4 5-8 0z" fill="#bd797c"/>
+    <path d="M899 289q-1 12-12 11m12-11q1 12 12 11" fill="none" stroke="#5a5360" stroke-width="3" stroke-linecap="round"/>
+    <path d="M840 300l27 1m-27 9 28-3m64-7 27-1m-27 7 28 3" stroke="#6f8190" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+    <path d="M851 352q48 20 96 0" fill="none" stroke="#6f94bb" stroke-width="4" stroke-linecap="round" opacity=".65"/>
+    <path d="M988 316q36-1 31-34-2-17-15-17" fill="none" stroke="#6f94bb" stroke-width="8" stroke-linecap="round"/>
+    <path d="M1008 271q11-3 14 7" fill="none" stroke="#f3b3b0" stroke-width="5" stroke-linecap="round"/>
+  </g>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <rect x="809" y="383" width="179" height="24" rx="12" fill="#fffdf9" stroke="#e7ddcd"/>
+    <circle cx="829" cy="395" r="4" fill="#7fb77e"/>
+    <text x="842" y="399" fill="#756d61" font-size="10" font-weight="600">A companion with boundaries.</text>
+  </g>
+</svg>

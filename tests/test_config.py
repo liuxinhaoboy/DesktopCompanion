@@ -52,6 +52,28 @@ def test_defaults_merged_for_missing_fields():
     assert cfg["emotion"]["mood_decay_per_minute"] == 0.5
 
 
+def test_config_template_matches_runtime_defaults():
+    """无密钥模板必须完整同步默认配置，避免老模板漏掉新配置项。"""
+    template = json.loads((ROOT / "config_template.json").read_text(encoding="utf-8"))
+    template = {k: v for k, v in template.items() if not k.startswith("_")}
+    assert template == DEFAULT_CONFIG, "config_template.json 与 DEFAULT_CONFIG 已漂移"
+    assert template["llm"]["api_key"] == "", "模板不应带示例/占位 API key"
+
+
+def test_first_run_bootstraps_config_from_template():
+    """缺少 config.json 时从旁边的模板自动生成可用配置。"""
+    d = temp_dir()
+    (d / "config_template.json").write_text(
+        (ROOT / "config_template.json").read_text(encoding="utf-8"), encoding="utf-8")
+    store = ConfigStore(d / "config.json")
+    cfg = store.load()
+    assert cfg == DEFAULT_CONFIG
+    assert cfg["llm"]["api_key"] == ""
+    assert (d / "config.json").is_file(), "首次启动应落盘生成 config.json"
+    saved = json.loads((d / "config.json").read_text(encoding="utf-8"))
+    assert saved["_说明"].startswith("无密钥模板。首次运行")
+
+
 def test_type_mismatch_falls_back_to_default():
     """字段类型写错时用默认值并记警告，不崩。"""
     d = temp_dir()

@@ -37,6 +37,7 @@ from PyQt6.QtWidgets import (
 FONT = "Microsoft YaHei UI"
 # 和聊天窗一致的暖色调，整套界面看起来是同一个"家"
 from face.theme import app_qss
+from face.brand_header import brand_header
 STYLE = app_qss()
 
 
@@ -95,6 +96,16 @@ class SettingsPanel(QWidget):
 
         root = QVBoxLayout(self)
         root.setContentsMargins(12, 12, 12, 12)
+        root.setSpacing(10)
+
+        self.brand_header = brand_header(
+            f"{controller.engine.name} 的小窝",
+            "伙伴 · AI · 语音 · 安全权限，一处打理",
+            badge="设置中心",
+            icon="✦",
+            tone="green",
+        )
+        root.addWidget(self.brand_header)
 
         self.tabs = QTabWidget()
         root.addWidget(self.tabs, 1)

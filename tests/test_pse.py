@@ -510,6 +510,29 @@ def _fake_llm(cesm):
     return client, fake
 
 
+def test_llm_without_api_key_is_safe_and_actionable():
+    """首次启动无密钥时可建引擎，聊天提示用户去设置而不是崩溃。"""
+    import os
+    from unittest.mock import patch
+    from soul.llm import LLMClient, NOT_CONFIGURED_REPLY
+    cesm = CESM(temp_dir() / "state.json", {})
+    with patch.dict(os.environ, {"OPENAI_API_KEY": ""}):
+        client = LLMClient({"api_key": ""}, cesm)
+    assert client._client is None
+
+    async def run():
+        return [piece async for piece in client.chat_stream("sys", [], "你好")]
+
+    assert asyncio.run(run()) == [NOT_CONFIGURED_REPLY]
+    assert cesm.state.counters["total_chats"] == 0, "未发生 API 对话时不应计聊天数"
+
+    try:
+        asyncio.run(client.plain_complete("sys", "测试"))
+        assert False, "未配置 API 时电脑操作规划应明确失败"
+    except RuntimeError as exc:
+        assert "设置" in str(exc) and "密钥" in str(exc)
+
+
 def test_llm_does_not_repeat_after_partial_output():
     """主模型吐了半截就断线时，绝不能换备用模型把整段再说一遍。
 

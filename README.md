@@ -1,8 +1,27 @@
+<div align="center">
+  <img src="docs/assets/hero.svg" alt="DesktopCompanion — a little AI desktop companion for Windows" width="100%" />
+  <p>
+    <a href="README.md">简体中文</a> · <a href="README_EN.md">English</a>
+  </p>
+  <p>
+    <a href="https://github.com/liuxinhaoboy/DesktopCompanion/actions/workflows/tests.yml"><img src="https://github.com/liuxinhaoboy/DesktopCompanion/actions/workflows/tests.yml/badge.svg?branch=main" alt="CI"></a>
+    <a href="https://github.com/liuxinhaoboy/DesktopCompanion/stargazers"><img src="https://img.shields.io/github/stars/liuxinhaoboy/DesktopCompanion?style=social" alt="GitHub stars"></a>
+    <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB.svg" alt="Python 3.11+">
+    <img src="https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D4.svg" alt="Windows 10/11">
+  </p>
+</div>
+
 # 桌宠 DesktopCompanion
 
-一只住在你 Windows 桌面上的 AI 小伙伴。她有自己的情绪、会记住你们聊过的事、会主动跟你搭话捣乱刷存在感，还能在你逐次同意后帮你读网页、整理文件、控制窗口。
+一只住在你 Windows 桌面上的 AI 小伙伴。她会呼吸、眨眼，有自己的情绪和记忆；能语音聊天、看图片，也可以在你**逐次确认**后帮你处理文件或操作浏览器。
 
-她不是摆设：**好感、情绪、信任、饱腹**四个数值会随你的对待实时变化，聊得开心她会更黏你，冷落久了她会闹脾气。
+**陪伴不只是一个头像**：好感、心情、信任、饱腹会随互动变化。你可以换伙伴、自定义立绘、上传 3D 模型，也可以随时把她调安静。
+
+| 有生命感 | 由你做主 | 隐私透明 |
+|---|---|---|
+| 情绪、长期记忆、作息和自主互动 | 电脑/浏览器操作逐次确认；能力可关 | 持久记录保存在本机；聊天时会把必要内容发送给你配置的 AI 服务 |
+
+> 喜欢这个项目的话，欢迎点一颗 ⭐、分享给喜欢桌宠的朋友，或通过 [Issues](https://github.com/liuxinhaoboy/DesktopCompanion/issues) 提建议 / 报 bug。**请勿提交 API key、`config.json`、`data/` 或私人聊天内容。**
 
 ---
 
@@ -19,6 +38,8 @@
 - [九、浏览器插件](#九浏览器插件)
 - [十、隐私与数据](#十隐私与数据)
 - [十一、常见问题](#十一常见问题)
+
+> English overview and quick start: [README_EN.md](README_EN.md).
 
 ---
 
@@ -37,23 +58,23 @@
 
 ### 安装依赖（只需做一次）
 
-在项目文件夹里按住 `Shift` 点右键 →「在此处打开 PowerShell 窗口」（或「在终端中打开」），粘贴这行回车：
+在项目文件夹里按住 `Shift` 点右键 →「在此处打开 PowerShell 窗口」（或「在终端中打开」），运行：
 
 ```powershell
-pip install -r requirements.txt
+py -m pip install -r requirements.txt
 ```
 
-等它跑完，看到 `Successfully installed ...` 就好了。
+如果电脑没有 `py` 启动器，改用 `python -m pip install -r requirements.txt`。等它跑完，看到 `Successfully installed ...` 就好了。安装依赖和启动程序要使用同一套 Python。
 
 ### 启动
 
-**双击项目里的 `run.bat`** —— 她就会出现在屏幕右下角。
+**双击项目里的 `run.bat`** —— 她就会出现在屏幕右下角。首次启动会从 `config_template.json` 自动生成仅在本机使用的 `config.json`，不需要手动复制文件；然后按下一节在「设置」里填 AI 接口。
 
 启动失败时黑窗口不会一闪而过，会停住让你截图求助。
 
 ### 退出
 
-**右键点击桌宠 → 「退出」**。
+**右键点击桌宠 → 「让她下班」**。
 关掉设置窗、聊天窗都不会退出她，这是故意的——她是常驻的小伙伴，不是用完即走的工具。
 
 ---
@@ -64,7 +85,7 @@ pip install -r requirements.txt
 
 1. **右键点击桌宠 → 「设置」**
 2. 切到 **「AI 与多模态」** 标签
-3. 填三项，然后点 **「保存并应用」**：
+3. 填三项，然后点 **「保存全部设置」**：
 
 | 字段 | 填什么 |
 |---|---|
@@ -74,8 +95,7 @@ pip install -r requirements.txt
 
 填完点 **「测试连接」**：成功会显示耗时；失败会用人话告诉你原因（地址写错 / 密钥无效 / 模型名不对 / 网络不通）。
 
-> **关于密钥安全**：你填的密钥会用 Windows 的 DPAPI 加密后存到 `data/secrets.bin`，`config.json` 里只留一个 `secret:llm_api_key` 引用，**不会出现明文**。界面上永远只显示末 4 位。
-> 密钥框**留空 = 不修改**，所以只改模型名保存，不会把已存的密钥弄丢。
+> **关于密钥安全**：Windows 上密钥会用 DPAPI 加密后存到 `data/secrets.bin`，通常 `config.json` 只留 `secret:llm_api_key` 引用；密钥框留空 = 不修改，界面不会回显明文。若系统加密不可用，程序为保持可用会回退到明文配置，因此不要分享 `config.json`（它已加入 `.gitignore`）。
 
 ---
 
@@ -262,9 +282,17 @@ pip install -r requirements.txt
 
 ## 十、隐私与数据
 
-所有数据都在**你自己的电脑上**，项目里的 `data/` 文件夹：
+**长期保存的数据**在你自己的电脑 `data/` 文件夹中。注意：使用在线 AI 功能时，相应内容会发给你配置的服务商；本地保存不等于不出网：
 
-| 文件 / 目录 | 存什么 |
+| 功能 | 发给服务商的内容 |
+|---|---|
+| AI 聊天 | 当前消息，以及用于保持上下文的近期聊天历史和检索到的记忆 |
+| 看图片 | 你选择的图片（上传前会压缩），发给配置的视觉模型 |
+| 语音转文字 | 本次录音发给配置的 STT 接口；应用不会默认保留录音文件 |
+| 语音朗读 | 回复文本发给所选 TTS 服务合成语音 |
+| 读取网页 | 仅在你确认后，网页正文会进入 AI 对话上下文 |
+
+| 本地文件 / 目录 | 存什么 |
 |---|---|
 | `state.json` | 四个情绪数值和计数器 |
 | `chat_history.json` | 聊天记录 |
@@ -279,14 +307,14 @@ pip install -r requirements.txt
 
 「设置 → 隐私」页可以设置录音是否留存（默认不留存）、日志保留天数、清空当前伙伴的记忆。
 
-> 想备份就把整个 `data/` 文件夹复制走。`config.json` 里只有密钥引用，真正的密钥在 `data/secrets.bin`，用 Windows DPAPI 加密并绑定你当前 Windows 账户——换台电脑就解不开了。
+> 想备份就把整个 `data/` 文件夹复制走。Windows DPAPI 可用且迁移成功时，`config.json` 只留密钥引用，密钥在 `data/secrets.bin` 并绑定当前 Windows 账户；若加密不可用则可能回退明文，备份或求助时先检查并遮住密钥。
 > **想把配置分享给别人？发 `config_template.json`，不要发 `config.json`。**
 
 ---
 
 ## 十一、常见问题
 
-**启动时黑窗口一闪就没了**：先确认依赖装好了，跑 `pip install -r requirements.txt`。`run.bat` 启动失败会停住窗口，把报错截图下来。
+**启动时黑窗口一闪就没了**：先确认依赖装好了，在项目目录运行 `py -m pip install -r requirements.txt`（没有 `py` 时用 `python -m pip`）。`run.bat` 启动失败会停住窗口，把报错截图下来；截图前记得遮住个人路径和密钥。
 
 **她只会说固定的台词**：AI 接口没配好。右键 →「设置」→「AI 与多模态」→ 点「测试连接」。注意 Base URL 必须以 `/v1` 结尾。
 
