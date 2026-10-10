@@ -14,6 +14,7 @@ LLM —— AI 大脑的接口封装
 from __future__ import annotations
 
 import asyncio
+import os
 import re
 from typing import AsyncIterator, Optional
 
@@ -31,6 +32,11 @@ FALLBACK_LINES = [
     "唔，脑子有点转不动……等下再试试？",
     "（她似乎走神了，一句话都没接上）",
 ]
+
+NOT_CONFIGURED_REPLY = (
+    "我还没连上 AI 接口呢。请右键桌宠打开「设置」→「AI 与多模态」，"
+    "填好接口地址和密钥，再点「测试连接」~"
+)
 
 
 def sanitize(text: str) -> str:
@@ -70,11 +76,19 @@ class LLMClient:
         self.timeout: float = float(cfg.get("timeout_seconds", 90))
         self.max_tokens_cap: int = int(cfg.get("max_tokens", 800))
 
-        self._client = AsyncOpenAI(
-            base_url=cfg.get("base_url", "https://docode.cc/v1"),
-            api_key=cfg.get("api_key", ""),
-            timeout=self.timeout,
-        )
+        # 第一次启动时用户还没在设置里填密钥，这是正常的引导流程。
+        # OpenAI SDK 会在构造时拒绝空 key；此时不应让整只桌宠启动失败，
+        # 而应等用户真正聊天时给出清楚的配置提示。
+        configured_key = cfg.get("api_key") or os.environ.get("OPENAI_API_KEY") or ""
+        self.api_key = str(configured_key).strip()
+        self.base_url = str(cfg.get("base_url") or "https://docode.cc/v1").strip()
+        self._client = None
+        if self.api_key:
+            self._client = AsyncOpenAI(
+                base_url=self.base_url,
+                api_key=self.api_key,
+                timeout=self.timeout,
+            )
         self._cesm = cesm
 
     # ------------------------------------------------------------------
@@ -128,6 +142,12 @@ class LLMClient:
         image_data_urls：可选的 data:image/...;base64,xxx 列表，带图时当前
         user 消息用 OpenAI 多模态 content 数组；历史只保留文本（在 engine 层处理）。
         """
+        # 没配置密钥时允许应用正常运行，给用户可操作的引导，而不是让 SDK
+        # 在程序启动时抛异常，或把"缺少 API key"伪装成普通网络故障。
+        if self._client is None:
+            yield NOT_CONFIGURED_REPLY
+            return
+
         # 历史出站前剥掉 ts 等内部字段；当前这条才可能带图片
         messages = ([{"role": "system", "content": system_prompt}]
                     + [clean_message(m) for m in history]
@@ -190,6 +210,8 @@ class LLMClient:
         和聊天分开：固定低温（要稳定 JSON）、不触发情绪回升、失败直接抛
         （由 planner 捕获后退回普通聊天），绝不在这里走兜底台词。
         """
+        if self._client is None:
+            raise RuntimeError(NOT_CONFIGURED_REPLY)
         resp = await self._client.chat.completions.create(
             model=self.model,
             messages=[{"role": "system", "content": system_prompt},

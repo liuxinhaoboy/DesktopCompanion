@@ -155,17 +155,29 @@ class ConfigStore:
     # 读取
     # ------------------------------------------------------------------
     def load(self) -> dict[str, Any]:
-        """读取 config.json 并合并默认值。文件不存在/格式错抛 ConfigError。"""
-        if not self.path.exists():
-            raise ConfigError(
-                "config.json 不存在！请把 config_template.json 复制一份并填入你的 API key。")
+        """读取 config.json 并合并默认值。
+
+        首次启动时若 config.json 不存在，就从旁边的 config_template.json
+        安全初始化一份（模板不含密钥）；没有模板或 JSON 损坏时才报错。
+        """
+        source = self.path
+        first_run = not self.path.exists()
+        if first_run:
+            source = self.path.with_name("config_template.json")
+            if not source.is_file():
+                raise ConfigError(
+                    "config.json 不存在，且找不到 config_template.json。"
+                    "请从项目模板复制一份配置文件后重试。")
         try:
-            raw = json.loads(self.path.read_text(encoding="utf-8"))
+            raw = json.loads(source.read_text(encoding="utf-8"))
         except json.JSONDecodeError as e:
+            filename = source.name
             raise ConfigError(
-                f"config.json 格式写错了（通常是少了逗号或引号）：{e}") from e
+                f"{filename} 格式写错了（通常是少了逗号或引号）：{e}") from e
+        except OSError as e:
+            raise ConfigError(f"无法读取 {source.name}：{e}") from e
         if not isinstance(raw, dict):
-            raise ConfigError("config.json 顶层必须是 JSON 对象（花括号包裹）。")
+            raise ConfigError(f"{source.name} 顶层必须是 JSON 对象（花括号包裹）。")
 
         # 摘出 _说明 字段单独保存，不参与合并和校验
         self._comments = {k: v for k, v in raw.items() if k.startswith("_")}
@@ -173,6 +185,9 @@ class ConfigStore:
 
         self.warnings.clear()
         self._cfg = self._merge_with_defaults(copy.deepcopy(DEFAULT_CONFIG), user_cfg)
+        if first_run:
+            # 首次启动即可直接打开桌宠设置，不要求用户先手动复制/编辑文件。
+            self.save()
         return self._cfg
 
     def _merge_with_defaults(self, defaults: dict, user: dict,

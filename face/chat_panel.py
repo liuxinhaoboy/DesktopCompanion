@@ -25,6 +25,7 @@ from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QTextEdit,
                              QLineEdit, QPushButton, QLabel, QFileDialog)
 
 from face.theme import app_qss, hint_style, BLUE, MUTED
+from face.brand_header import brand_header
 
 USER_BG = "#edf4ec"     # 你的消息块：浅奶绿
 AI_BG = "#eef3f9"       # 她的回复块：浅奶蓝
@@ -50,6 +51,15 @@ class ChatPanel(QWidget):
         root = QVBoxLayout(self)
         root.setContentsMargins(12, 12, 12, 12)
         root.setSpacing(8)
+
+        self.brand_header = brand_header(
+            f"和 {self.engine.name} 聊聊",
+            "给今天留一个舒服的小角落",
+            badge="聊天",
+            icon="✦",
+            tone="blue",
+        )
+        root.addWidget(self.brand_header)
 
         self.transcript = QTextEdit(readOnly=True)
         self.transcript.setFont(QFont("Microsoft YaHei UI", 11))
