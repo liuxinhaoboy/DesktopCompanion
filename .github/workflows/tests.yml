@@ -24,10 +24,10 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
@@ -37,37 +37,37 @@ jobs:
         run: python -m pip install -r requirements.txt
 
       - name: Test PSE
-        run: python tests/test_pse.py
+        run: python .github/scripts/run_regression.py tests/test_pse.py
 
       - name: Test ACL
-        run: python tests/test_acl.py
+        run: python .github/scripts/run_regression.py tests/test_acl.py
 
       - name: Test configuration and secrets
-        run: python tests/test_config.py
+        run: python .github/scripts/run_regression.py tests/test_config.py
 
       - name: Test characters
-        run: python tests/test_characters.py
+        run: python .github/scripts/run_regression.py tests/test_characters.py
 
       - name: Test settings UI
-        run: python tests/test_settings.py
+        run: python .github/scripts/run_regression.py tests/test_settings.py
 
       - name: Test voice and multimodal
-        run: python tests/test_voice.py
+        run: python .github/scripts/run_regression.py tests/test_voice.py
 
       - name: Test computer controls
-        run: python tests/test_hands.py
+        run: python .github/scripts/run_regression.py tests/test_hands.py
 
       - name: Test browser bridge
-        run: python tests/test_browser_protocol.py
+        run: python .github/scripts/run_regression.py tests/test_browser_protocol.py
 
       - name: Test 3D model rendering
-        run: python tests/test_model3d.py
+        run: python .github/scripts/run_regression.py tests/test_model3d.py
 
       - name: Test circadian behavior
-        run: python tests/test_circadian.py
+        run: python .github/scripts/run_regression.py tests/test_circadian.py
 
       - name: Test shop and economy
-        run: python tests/test_shop.py
+        run: python .github/scripts/run_regression.py tests/test_shop.py
 
       - name: Smoke test first-run startup
         shell: pwsh
