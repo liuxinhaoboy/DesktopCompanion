@@ -31,6 +31,19 @@ from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication
 
 
+def _configure_console_encoding() -> None:
+    """Keep Chinese diagnostics safe on Windows shells using legacy code pages."""
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if not callable(reconfigure):
+            continue
+        try:
+            reconfigure(encoding="utf-8", errors="replace")
+        except (OSError, ValueError):
+            # Some embedded/test streams cannot be reconfigured; logging is best-effort.
+            pass
+
+
 def _install_crash_logger() -> None:
     """把未捕获异常写入 data/crash.log。
 
@@ -68,6 +81,7 @@ def _install_crash_logger() -> None:
 
 
 def main() -> int:
+    _configure_console_encoding()    # 中文诊断信息不能被 Windows 旧代码页绊倒
     _install_crash_logger()          # 第一件事：先装好"黑匣子"再干别的
 
     app = QApplication(sys.argv)
